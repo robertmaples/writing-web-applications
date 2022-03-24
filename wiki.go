@@ -13,7 +13,7 @@ type Page struct {
 	Body  []byte
 }
 
-var templates = template.Must(template.ParseFiles("edit.html", "view.html"))
+var templates = template.Must(template.ParseGlob("tmpl/*"))
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 func main() {
@@ -70,12 +70,12 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 }
 
 func (p *Page) save() error {
-	filename := p.Title + ".txt"
+	filename := "data/" + p.Title + ".txt"
 	return os.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := "data/" + title + ".txt"
 	body, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
